@@ -6,8 +6,32 @@
  $_SESSION['Compound_id'] = $ref_id;
  ?>
 
- <?php
 
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <meta charset="utf-8">
+     <title>MMP Main page</title>
+     <link rel="stylesheet" href="css/mmp.css">
+   </head>
+   <body>
+     <div class="container">
+     <h1>Matched Molecular Pairs </h1>
+     <nav>
+       <a href="index.php" class = "active">Back to main page</a>
+     </nav>
+   </div>
+
+   <!-- <form method='post' action='download.php'>
+     <div class="downl">
+    <input type='submit' value='Download IKENA MMPs' name='Export'>
+    </div> -->
+
+   <!-- </body>
+ </html> -->
+
+ <?php
+      // echo("<h2>"."IKENA Matched  Pairs for compound". $ref_id ."</h2>");
  /* Get all the parameters of the reference molecule*/
 
        $stmt = $pdo->prepare("SELECT mean, Molecule_id FROM ". $_SESSION['prop_1']. "
@@ -61,6 +85,12 @@
      $stmt->execute(array(':id_comp' => $ref_id));
      $rowss = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+     // print_r($stmt);
+     //
+     // print_r($row_ref_erk['Molecule_id']);
+
+
+     echo("<h2>"."IKENA Matched  Pairs for compound ". $row_ref_erk['Molecule_id'] ."</h2>");
      echo('<table border="1">'."\n");
      echo('<tr><th>Compound_1</th>');
      echo('<th>Compound_2</th>');
@@ -76,6 +106,28 @@
      echo('<th>Transform_id</th>');
      echo('<th>Lhs_id</th>');
      echo('<th>Context_id</th></tr>');
+
+     $master_arr_ikena = array();
+     $master_arr_ikena[] = array('ID_1','ID_2',
+                                 $_SESSION['prop_1'],$_SESSION['prop_1'],
+                                 $_SESSION['prop_2'],$_SESSION['prop_2'],
+                                 $_SESSION['prop_3'],$_SESSION['prop_3'],
+                                 $_SESSION['prop_4'],$_SESSION['prop_4'],
+                                 'Transform');
+
+     foreach ($rowss as $row){
+        $master_arr_ikena[] = array($row_ref_erk['Molecule_id'],$row['id_b'],
+                                    $row_ref_erk['mean'],$row['erk_ic50'],
+                                    $row_ref_herg['mean'],$row['herg'],
+                                    $row_ref_sol['mean'],$row['solubility'],
+                                    $row_ref_logd['mean'], $row['logd'],
+                                    $row['smirks']);
+     }
+
+     $serialize_user_arr = serialize($master_arr_ikena);
+
+     $_SESSION['filename'] = 'comps_mmps.csv';
+
 
      foreach ($rowss as $row){
        echo "<tr><td>";
@@ -113,7 +165,7 @@
 
   ?>
 
- <!DOCTYPE html>
+ <!-- <!DOCTYPE html>
  <html lang="en" dir="ltr">
    <head>
      <meta charset="utf-8">
@@ -126,6 +178,24 @@
      <nav>
        <a href="index.php" class = "active">Back to main page</a>
      </nav>
+     <form method='post' action='download.php'>
+      <input type='submit' value='Download IKENA MMPs' name='Export'>
+
+   </body>
+ </html> -->
+
+ <form method='post' action='download.php'>
+   <div class="downl">
+  <input type='submit' value='Download IKENA MMPs' name='Export'>
+  </div>
+
+ <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
+</form>
+</body>
+</html>
 
    </body>
  </html>
+
+<!-- </body>
+</html> -->

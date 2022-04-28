@@ -47,6 +47,16 @@
          $stmt->execute(array());
          $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+         // $output = array_slice($rows, 0, 3);
+
+         // print_r($rows);
+         // $serialize_user_arr = base64_encode(serialize($rows));
+
+         $serialize_user_arr = serialize($rows);
+
+         // print_r($serialize_user_arr);
+
+
          echo('<table border="1">'."\n");
          echo('<tr><th>Compound</th>');
          echo('<th>'.$_POST['prop_1'].'</th>');
@@ -210,6 +220,11 @@
           </p>
            <input type="submit" name="submit" value="Submit">
         </form>
+        <!-- <form method='post' action='download.php'>
+         <input type='submit' value='Export' name='Export'>
+         <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
+       </form> -->
+
       </section>
 
       <aside class="center">

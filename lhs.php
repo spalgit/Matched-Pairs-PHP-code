@@ -21,13 +21,16 @@
           <a href="comp.php?Compound_id=<?php echo($compref) ?>" class = "active">Previous page</a>
         </nav>
       </div>
-  </body>
-</html>
+
+      <!-- <form method='post' action='download.php'>
+        <input type='submit' value='Download IKENA MMPs' name='Export'> -->
+  <!-- </body>
+</html> -->
 
 <?php
 
 
-      echo("<h2>"."IKENA Compounds and Chembl"."</h2>");
+      // echo("<h2>"."IKENA Compounds and Chembl"."</h2>");
 
       if($_SESSION['prop_5'] == 'chembl_herg'){
         $field_1 = "chembl_clearance";
@@ -56,11 +59,13 @@
         $field_4 = "chembl_bioavailability";
       }
 
-      $stmt = $pdo->prepare("SELECT id_a, context_id, erk_ic50,herg, solubility, mean as logd
-                           from (select id_a, context_id, erk_ic50, solubility, mean
-                           as herg from(select id_a,context_id, erk_ic50,
-                           mean as solubility from (SELECT mol_id_a as id_a,context_id,
+
+      $stmt = $pdo->prepare("SELECT id_a, context_id,smiles_a,lhs_trans, erk_ic50,herg, solubility, mean as logd
+                           from (select id_a, context_id, erk_ic50,smiles_a,lhs_trans, solubility, mean
+                           as herg from(select id_a,context_id, erk_ic50,smiles_a,lhs_trans,
+                           mean as solubility from (SELECT mol_id_a as id_a,context_id,smiles_a,lhs_trans,
                            mean as erk_ic50 from(SELECT id_a, ikenacomps.Molecule_id as mol_id_a,
+                           ikenacomps.CXCSmiles as smiles_a, transform_left.transform_left as lhs_trans,
                            context_id FROM mmp join ikenacomps on ikenacomps.id=id_a
                            join transform_left on transform_left.id = mmp.lhs_id
                            where transform_left.id = :left_id) as tab left join ". $_SESSION['prop_1']. "
@@ -74,11 +79,12 @@
         $stmt->execute(array(':left_id' => $lhs_id));
         $rowsa = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("SELECT id_b, context_id, erk_ic50,herg, solubility, mean as logd
-                             from (select id_b, context_id, erk_ic50, solubility, mean
-                             as herg from(select id_b,context_id, erk_ic50,
-                             mean as solubility from (SELECT mol_id_b as id_b,context_id,
+        $stmt = $pdo->prepare("SELECT id_b, context_id, erk_ic50,herg,smiles_b,lhs_trans, solubility, mean as logd
+                             from (select id_b, context_id,smiles_b,lhs_trans, erk_ic50, solubility, mean
+                             as herg from(select id_b,context_id, smiles_b,lhs_trans,erk_ic50,
+                             mean as solubility from (SELECT mol_id_b as id_b,context_id,smiles_b,lhs_trans,
                              mean as erk_ic50 from(SELECT id_b, ikenacomps.Molecule_id as mol_id_b,
+                             ikenacomps.CXCSmiles as smiles_b, transform_left.transform_left as lhs_trans,
                              context_id FROM mmp join ikenacomps on ikenacomps.id=id_b
                              join transform_left on transform_left.id = mmp.lhs_id
                              where transform_left.id = :left_id) as tab left join ". $_SESSION['prop_1']. "
@@ -91,6 +97,8 @@
 
          $stmt->execute(array(':left_id' => $lhs_id));
          $rowsb = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+         echo("<h2>"."IKENA Compounds and Chembl with LHS = ". $rowsa['0']['lhs_trans']."</h2>");
 
 
          echo('<table border="1">'."\n");
@@ -109,14 +117,38 @@
 
          $array_diff = array();
 
+         $master_arr_ikena = array();
+         $master_arr_ikena[] = array('ID_1','ID_2',
+                                     'Smiles_1', 'Smiles_2',
+                                     $_SESSION['prop_1'],$_SESSION['prop_1'],
+                                     $_SESSION['prop_2'],$_SESSION['prop_2'],
+                                     $_SESSION['prop_3'],$_SESSION['prop_3'],
+                                     $_SESSION['prop_4'],$_SESSION['prop_4']
+                                     );
+
           for($i = 0; $i < count($rowsa); ++$i) {
             $diff = $rowsb[$i]['erk_ic50'] - $rowsa[$i]['erk_ic50'];
             $array_diff += [$i => $diff];
+            if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
+                $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],
+                                            $rowsa[$i]['smiles_a'],$rowsb[$i]['smiles_b'],
+                                            $rowsa[$i]['erk_ic50'],$rowsb[$i]['erk_ic50'],
+                                            $rowsa[$i]['herg'], $rowsb[$i]['herg'],
+                                            $rowsa[$i]['solubility'], $rowsb[$i]['solubility'],
+                                            $rowsa[$i]['logd'], $rowsb[$i]['logd']
+                                            );
+            }
           }
 
           asort($array_diff);
+
+          $serialize_user_arr = serialize($master_arr_ikena);
+
+          $_SESSION['filename'] = 'lhs.csv';
+
           foreach($array_diff as $i => $value) {
-            if($value != 0){
+            if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
+            // if($value != 0){
               echo "<tr><td>";
               $img = "images/".$rowsa[$i]['id_a'].".png";
               echo("<img src=".$img.">");
@@ -145,15 +177,27 @@
             }
           }
 
+          ?>
 
-          $stmt = $pdo->prepare("SELECT id_a, context_id, chmbl_clearance,assay_type,chmbl_herg, chmbl_F_percent,
-                                chmbl_half_life, assay_chmbl_id,mean as chmbl_vdss from (SELECT id_a, context_id, chmbl_clearance,assay_type,
+          <form method='post' action='download.php'>
+          <div class="downl">
+           <input type='submit' value='Download IKENA MMPs' name='Export'>
+           <!-- <input type='submit' value='Download IKENA MMPs' name='Export' style='display: inline:block; float:right; margin-right:45%; margin-bottom:20px; border-radius: 5px; padding:10px; background-color: #daead5;text-decoration: none;'> -->
+          </div>
+          <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
+         </form>
+
+           <?php
+
+
+          $stmt = $pdo->prepare("SELECT id_a,smiles_a,context_id, chmbl_clearance,assay_type,chmbl_herg, chmbl_F_percent,
+                                chmbl_half_life, assay_chmbl_id,mean as chmbl_vdss from (SELECT id_a, smiles_a,context_id, chmbl_clearance,assay_type,
                                 chmbl_herg, assay_chmbl_id,chmbl_F_percent, mean as chmbl_half_life
-                               from (select id_a, context_id, chmbl_clearance,assay_type, assay_chmbl_id,chmbl_herg, mean
-                               as chmbl_F_percent from (SELECT id_a, context_id,
-                              chmbl_clearance,assay_type,assay_chmbl_id, mean as chmbl_herg from(SELECT mol_id_a as id_a,context_id,
+                               from (select id_a, smiles_a,context_id, chmbl_clearance,assay_type, assay_chmbl_id,chmbl_herg, mean
+                               as chmbl_F_percent from (SELECT id_a, smiles_a,context_id,
+                              chmbl_clearance,assay_type,assay_chmbl_id, mean as chmbl_herg from(SELECT mol_id_a as id_a,smiles_a,context_id,
                                mean as chmbl_clearance, assay_description as assay_type, assay_chembl_id as assay_chmbl_id from
-                                (SELECT id_a, ikenacomps.Molecule_id as mol_id_a,
+                                (SELECT id_a, ikenacomps.Molecule_id as mol_id_a, ikenacomps.CXCSmiles as smiles_a,
                                  context_id FROM mmp_chembl join ikenacomps on ikenacomps.id=id_a
                                  join transform_left on transform_left.id = mmp_chembl.lhs_id
                                  where transform_left.id = :left_id) as tab left join ". $_SESSION['prop_5']. "
@@ -172,17 +216,19 @@
           // print_r($stmt);
 
           $stmt->execute(array(':left_id' => $lhs_id));
+
+          // print_r($stmt);
           $rowsa = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-          $stmt = $pdo->prepare("SELECT id_b, context_id, chmbl_clearance,assay_type,chmbl_herg, chmbl_F_percent,assay_chmbl_id,
-                                chmbl_half_life, mean as chmbl_vdss from (SELECT id_b, context_id, chmbl_clearance,assay_type,
+          $stmt = $pdo->prepare("SELECT id_b, smiles_b,context_id, chmbl_clearance,assay_type,chmbl_herg, chmbl_F_percent,assay_chmbl_id,
+                                chmbl_half_life, mean as chmbl_vdss from (SELECT id_b, smiles_b,context_id, chmbl_clearance,assay_type,
                                 chmbl_herg, chmbl_F_percent, assay_chmbl_id,mean as chmbl_half_life
-                               from (select id_b, context_id, chmbl_clearance,assay_type, chmbl_herg, assay_chmbl_id,mean
-                               as chmbl_F_percent from (SELECT id_b, context_id,
-                              chmbl_clearance,assay_type,assay_chmbl_id, mean as chmbl_herg from(SELECT mol_id_b as id_b,context_id,
+                               from (select id_b, smiles_b,context_id, chmbl_clearance,assay_type, chmbl_herg, assay_chmbl_id,mean
+                               as chmbl_F_percent from (SELECT id_b, smiles_b,context_id,
+                              chmbl_clearance,assay_type,assay_chmbl_id, mean as chmbl_herg from(SELECT mol_id_b as id_b,smiles_b,context_id,
                                mean as chmbl_clearance, assay_description as assay_type, assay_chembl_id as assay_chmbl_id from
-                                (SELECT id_b, ikenacomps.Molecule_id as mol_id_b,
+                                (SELECT id_b, ikenacomps.Molecule_id as mol_id_b,ikenacomps.CXCSmiles as smiles_b,
                                  context_id FROM mmp_chembl join ikenacomps on ikenacomps.id=id_b
                                  join transform_left on transform_left.id = mmp_chembl.lhs_id
                                  where transform_left.id = :left_id) as tab left join ". $_SESSION['prop_5']. "
@@ -229,14 +275,46 @@
              $array_diff += [$i => $diff];
            }
 
+
+           $master_arr_chembl = array();
+           $master_arr_chembl[] = array('ID_1','ID_2',
+                                       'Smiles_1', 'Smiles_2',
+                                       $_SESSION['prop_5'],$_SESSION['prop_5'],
+                                       'Assay_Chembl_ID', 'Description',
+                                       $field_1,$field_1,
+                                       $field_2,$field_2,
+                                       $field_3,$field_3,
+                                       $field_4,$field_4
+
+                                       );
+
+
+           for($i = 0; $i < count($rowsa); ++$i) {
+             if($rowsa[$i]['chmbl_clearance'] >0 || $rowsa[$i]['chmbl_clearance'] >0){
+                 $master_arr_chembl[] = array($rowsa[$i]['id_a'], $rowsb[$i]['id_b'],
+                                              $rowsa[$i]['smiles_a'], $rowsb[$i]['smiles_b'],
+                                              $rowsb[$i]['assay_chmbl_id'],$rowsb[$i]['assay_type'],
+                                              $rowsa[$i]['chmbl_clearance'], $rowsb[$i]['chmbl_clearance'],
+                                              $rowsa[$i]['chmbl_herg'],$rowsb[$i]['chmbl_herg'],
+                                              $rowsa[$i]['chmbl_F_percent'],$rowsb[$i]['chmbl_F_percent'],
+                                              $rowsa[$i]['chmbl_half_life'],$rowsb[$i]['chmbl_half_life'],
+                                              $rowsa[$i]['chmbl_vdss'],$rowsb[$i]['chmbl_vdss']
+                                            );
+              }
+           }
+
+           $serialize_chembl_arr = serialize($master_arr_chembl);
+
+           $_SESSION['chembl_filename'] = 'chembl_lhs_constant.csv';
+
            arsort($array_diff);
            //
            // echo(count($rowsa));
 
            foreach($array_diff as $i => $value) {
-             if($i<100){
+             // if($i<100){
 
-               if($value > 0){
+               if($rowsa[$i]['chmbl_clearance'] >0 || $rowsa[$i]['chmbl_clearance'] >0){
                  if(strlen($rowsa[$i]['assay_chmbl_id'])<1) {
                    $assay_id = $rowsb[$i]['assay_chmbl_id'];
                    $assay_t = $rowsb[$i]['assay_type'];
@@ -282,10 +360,24 @@
                  echo(htmlentities($rowsb[$i]['chmbl_vdss']));
                  echo("</td><tr>\n");
                }
-             }
+             //} //100
            }
 
  ?>
+
+ <h2>Chembl Matched pairs</h2>
+ <form method='post' action='download_chem.php'>
+ <div class="downl">
+   <input type='submit' value='Download CHEMBL MMPs' name='Export'>
+ </div>
+ <textarea name='export_chembl_data' style='display: none;'><?php echo $serialize_chembl_arr; ?></textarea>
+ </form>
+
+
+ <!-- <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
+</form> -->
+</body>
+</html>
 
 <!-- <!DOCTYPE html>
 <html>
