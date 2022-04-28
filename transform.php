@@ -316,8 +316,8 @@
       if($rowsa[$i]['chmbl_clearance'] >0 || $rowsa[$i]['chmbl_clearance'] >0){
         $master_arr_chembl[] = array($rowsa[$i]['id_a'], $rowsb[$i]['id_b'],
                                      $rowsa[$i]['smiles_a'], $rowsb[$i]['smiles_b'],
-                                     $rowsb[$i]['assay_chmbl_id'],$rowsb[$i]['assay_type'],
                                      $rowsa[$i]['chmbl_clearance'], $rowsb[$i]['chmbl_clearance'],
+                                     $rowsb[$i]['assay_chmbl_id'],$rowsb[$i]['assay_type'],
                                      $rowsa[$i]['chmbl_herg'],$rowsb[$i]['chmbl_herg'],
                                      $rowsa[$i]['chmbl_F_percent'],$rowsb[$i]['chmbl_F_percent'],
                                      $rowsa[$i]['chmbl_half_life'],$rowsb[$i]['chmbl_half_life'],

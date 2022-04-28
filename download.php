@@ -1,19 +1,18 @@
 <?php
 session_start();
 $filename = $_SESSION['filename'];
-// $chembl_file = $_SESSION['chembl_filename'];
-// $export_data = unserialize($_POST['export_data']);
 
-
-// print_r($_POST['export_data']);
 $export_data = unserialize($_POST['export_data']);
-// $export_chembl_data = unserialize($_POST['export_chembl_data']);
-
-// print_r($export_data);
 
 
 // file creation
-$file = fopen($filename,"w");
+
+$dir = "c:\\Users\\sandeep";
+$file_temp = $dir."\\".$filename;
+// print_r($file_temp);
+// $filename = $file_temp;
+
+$file = fopen($file_temp,"w");
 
 foreach ($export_data as $line){
  fputcsv($file,$line);
@@ -36,10 +35,11 @@ header("Content-Description: File Transfer");
 header("Content-Disposition: attachment; filename=".$filename);
 header("Content-Type: application/csv; ");
 
-readfile($filename);
+// readfile($filename);
+readfile($file_temp);
 
 // deleting file
-unlink($filename);
+unlink($file_temp);
 
 // download Chembl
 // header("Content-Description: File Transfer");
