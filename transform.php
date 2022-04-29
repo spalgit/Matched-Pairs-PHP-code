@@ -21,6 +21,10 @@
         <nav>
           <a href="comp.php?Compound_id=<?php echo($compref) ?>" class = "active">Previous page</a>
         </nav>
+        <nav>
+          <a href="all_comps.php" class = "active">Back to compounds data</a>
+        </nav>
+
       </div>
 
        <!-- <form method='post' action='download.php'>
