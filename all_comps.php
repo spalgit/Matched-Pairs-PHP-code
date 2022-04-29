@@ -114,9 +114,9 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
 
 $comp_pairs = array();
 for($i = 0; $i < count($rowsa); ++$i) {
-  $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
-  if(in_array($indexes, $comp_pairs) ==  false){
-      if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
+  // $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
+  // if(in_array($indexes, $comp_pairs) ==  false){
+      // if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
          if($i%2 == 0){
             $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],
                                         $rowsa[$i]['smiles_a'],$rowsb[$i]['smiles_b'],
@@ -126,10 +126,10 @@ for($i = 0; $i < count($rowsa); ++$i) {
                                         $rowsa[$i]['logd'], $rowsb[$i]['logd'],
                                         $rowsa[$i]['smirks']);
           }
-      }
+      // }
       // array_push($comp_pairs, $indexes);
-  }
-  array_push($comp_pairs, $indexes);
+  // }
+  // array_push($comp_pairs, $indexes);
 
 }
 
