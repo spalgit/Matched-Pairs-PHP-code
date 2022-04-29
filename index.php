@@ -31,57 +31,9 @@
           $_SESSION['prop_4'] = $_POST['prop_4'];
           $_SESSION['prop_5'] = $_POST['prop_5'];
 
-        $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_molid, mean as logd
-                               FROM (select Compound_id,erk_ic50,herg_IC50, mean as Fassif_sol, erk_molid
-                               FROM (select Compound_id,erk_ic50, mean as herg_IC50,erk_molid
-                               FROM (select Molecule_id as Compound_id, mean as erk_ic50, mol_id as erk_molid
-                               FROM ". $_POST['prop_1']. ") as tab
-                               left join ". $_POST['prop_2']. " on ". $_POST['prop_2']. ".mol_id = erk_molid) as tab
-                               left join ". $_POST['prop_3']. "
-                               on ". $_POST['prop_3']. ".mol_id = erk_molid)
-                               as tab left join ". $_POST['prop_4']. " on ". $_POST['prop_4']. ".mol_id = erk_molid
-                               order by erk_ic50");
+          header('Location: all_comps.php');
+          return;
 
-         // print_r($stmt);
-
-         $stmt->execute(array());
-         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-         // $output = array_slice($rows, 0, 3);
-
-         // print_r($rows);
-         // $serialize_user_arr = base64_encode(serialize($rows));
-
-         $serialize_user_arr = serialize($rows);
-
-         // print_r($serialize_user_arr);
-
-
-         echo('<table border="1">'."\n");
-         echo('<tr><th>Compound</th>');
-         echo('<th>'.$_POST['prop_1'].'</th>');
-         echo('<th>'.$_POST['prop_2'].'</th>');
-         echo('<th>'.$_POST['prop_3'].'</th>');
-         echo('<th>'.$_POST['prop_4'].'</th>');
-
-         echo('<th>MMP_links</th></tr>');
-
-         foreach ($rows as $row){
-           echo "<tr><td>";
-           $img = "images/".$row['Compound_id'].".png";
-           echo("<img src=".$img.">");
-           echo("</td><td>");
-           echo(htmlentities($row['erk_ic50']));
-           echo("</td><td>");
-           echo(htmlentities($row['herg_IC50']));
-           echo("</td><td>");
-           echo(htmlentities($row['Fassif_sol']));
-           echo("</td><td>");
-           echo(htmlentities($row['logd']));
-           echo("</td><td>");
-           echo('<a href="comp.php?Compound_id='.$row['erk_molid'].'">Query_mmps</a>');
-           echo("</td><tr>\n");
-         }
        }  // else all field are required
 
    } // Last
@@ -122,7 +74,75 @@
         <div id = "demo">
         <p>Please choose some tabels and cut and paste in the form on the right</p>
         <ol>
+
           <li>erk5_biochem_ic50__avg_ic50__nm_</li>
+<li>herg__ic50__um_</li>
+<li>kinetic_solubility__fassif___kinetic_solubility__um_</li>
+<li>measured_logd__logd</li>
+<li>pharmacokinetic__cmax__ng_ml_</li>
+<li>pharmacokinetic__tmax__h_</li>
+<li>pharmacokinetic__t1_2__h_</li>
+<li>pharmacokinetic__vdss__l_kg_</li>
+<li>pharmacokinetic__cl__ml_min_kg_</li>
+<li>pharmacokinetic__bioavailability____</li>
+<li>plasma_stability__t1_2</li>
+<li>erk5_mef2_ic50_paraza__avg_ic50__nm_</li>
+<li>caco2_w_bsa__papp__a_to_b___10_6_cm_s_</li>
+<li>caco2_w_bsa__paap__b_to_a___10_6_cm_s_</li>
+<li>caco2_w_bsa__efflux_ratio</li>
+<li>craf_mek_spr__kd__m_</li>
+<li>fbs_binding__equilibrium_dialysis___unbound____</li>
+<li>fbs_binding__equilibrium_dialysis___bound____</li>
+<li>fbs_binding__equilibrium_dialysis___remaining____</li>
+<li>hepatocyte_stability__t1_2__min_</li>
+<li>hepatocyte_stability__er__ratio_</li>
+<li>hepatocyte_stability__clint__ml_min_kg_</li>
+<li>perk_aspc_1__g12d__htrf__4_hour___ic50__um_</li>
+<li>perk_aspc_1__g12d__htrf__4_hour___average_ic50__nm_</li>
+<li>perk_aspc_1__g12d__icw__4_hour___ic50__um_</li>
+<li>perk_aspc_1__g12d__icw__4_hour___ic95__um_</li>
+<li>perk_aspc_1__g12d__icw__4_hour___average_ic50__nm_</li>
+<li>plasma_protein_binding__dialysis___unbound____</li>
+<li>plasma_protein_binding__dialysis___bound____</li>
+<li>plasma_protein_binding_ucentri__unbound____</li>
+<li>plasma_protein_binding_ucentri__recovery____</li>
+<li>aspc_1__g12d__ctg____inhibition____</li>
+<li>aspc_1__g12d__ctg__average_ic50__nm_</li>
+<li>g12c_kras__gtp_htrf__ic50__um_</li>
+<li>g12c_kras__gtp_htrf__average_ic50__nm_</li>
+<li>g12c_kras__gtp_htrf__selectivity__g12c_wt_</li>
+<li>g12d_kras_craf_gmppnp_htrf__ic50__um_</li>
+<li>g12d_kras_craf_gmppnp_htrf__average_ic50__nm_</li>
+<li>g12d_kras_craf_gmppnp_htrf__selectivity__g12d_wt_</li>
+<li>g12d_kras__gtp_htrf__ic50__um_</li>
+<li>g12d_kras__gtp_htrf__average_ic50__nm_</li>
+<li>g12v_kras__gtp_htrf__ic50__um_</li>
+<li>g12v_kras__gtp_htrf__average_ic50__nm_</li>
+<li>g12v_kras__gtp_htrf__selectivity__g12v_wt_</li>
+<li>mdck_w_bsa___pgp_inhibitor__papp__a_to_b___10_6_cm_s_</li>
+<li>mdck_w_bsa___pgp_inhibitor__papp__b_to_a___10_6_cm_s_</li>
+<li>mdck_w_bsa___pgp_inhibitor__efflux_ratio</li>
+<li>mdck_w_bsa___pgp_inhibitor__recovery__a_to_b_____</li>
+<li>mdck_w_bsa___pgp_inhibitor__recovery__b_to_a_____</li>
+<li>microsomal_stability__t1_2__min_</li>
+<li>microsomal_stability__er__ratio_</li>
+<li>microsomal_stability__clint__ml_min_kg_</li>
+<li>pampa_egg__pe</li>
+<li>pampa_egg__recovery____</li>
+<li>pc9__wt__ctg__ic50__um_</li>
+<li>pc9__wt__ctg__ic95__um_</li>
+<li>pc9__wt__ctg__average_ic50__nm_</li>
+<li>perk_pc9__wt__htrf__4_hour___ic50__um_</li>
+<li>perk_pc9__wt__htrf__4_hour___ic95__um_</li>
+<li>perk_pc9__wt__htrf__4_hour___average_ic50__nm_</li>
+<li>wt_kras_craf_gmppnp_htrf__ic50__um_</li>
+<li>wt_kras_craf_gmppnp_htrf__average_ic50__nm_</li>
+<li>wt_kras__gtp_htrf__average_ic50__nm_</li>
+<li>log_p</li>
+<li>log_d</li>
+<li>topological_polar_surface_area</li>
+
+          <!-- <li>erk5_biochem_ic50__avg_ic50__nm_</li>
           <li>herg__ic50__um_</li>
           <li>kinetic_solubility__fassif___kinetic_solubility__um_</li>
           <li>measured_logd__logd</li>
@@ -187,7 +207,7 @@
           <li>WT_KRas__GTP_HTRF__Average_IC50__nM_</li>
           <li>log_P</li>
           <li>log_D</li>
-          <li>Topological_polar_surface_area</li>
+          <li>Topological_polar_surface_area</li> -->
         </ol>
         </div>
 
@@ -196,39 +216,34 @@
 
 
       <section class = "right">
-        <h2> Please paste database tables here</h2>
+        <h2> Copy and paste from IKENA and Chembl data</h2>
+
+
         <form method="post">
           <p> Main property:
-            <p>Please choose a table from IKENA data with IC50 values from the options shown in IKENA DATA</p>
+            <p>Choose a table from IKENA data with IC50 values from the options shown in IKENA DATA</p>
              <input type="text" name="prop_1" size="30">
           </p>
           <p> Property_2, Any property of your choice from IKENA DATA :
-            <!-- <p>Any property of your choice from IKENA DATA</p> -->
              <input type="text" name="prop_2" size="30">
           </p>
           <p> Property_3, Any property of your choice from IKENA DATA:
-            <!-- <p>Any property of your choice from IKENA DATA</p> -->
              <input type="text" name="prop_3" size="30">
           </p>
           <p> Property_4, Any property of your choice from IKENA DATA:
-            <!-- <p>Any property of your choice from IKENA DATA</p> -->
              <input type="text" name="prop_4" size="30">
           </p>
           <p> Chembl_Porperty_of_Interest, Any property from CHEMBL TABLES:
-            <!-- <p>Any property from CHEMBL TABLES</p> -->
              <input type="text" name="prop_5" size="30">
           </p>
            <input type="submit" name="submit" value="Submit">
         </form>
-        <!-- <form method='post' action='download.php'>
-         <input type='submit' value='Export' name='Export'>
-         <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
-       </form> -->
+
 
       </section>
 
       <aside class="center">
-        <h2>Chembl Tables</h2>
+        <h2>Chembl Data</h2>
         <div id = "demo">
           <p>Please choose one table and cut and paste</p>
           <ol>

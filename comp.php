@@ -18,7 +18,7 @@
      <div class="container">
      <h1>Matched Molecular Pairs </h1>
      <nav>
-       <a href="index.php" class = "active">Back to main page</a>
+       <a href="all_comps.php" class = "active">Back to compounds data</a>
      </nav>
    </div>
 
