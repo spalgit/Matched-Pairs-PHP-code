@@ -149,8 +149,8 @@
       // array_push($comp_pairs, $indexes);
       // print_r($comp_pairs);
       // echo('<br>');
-
-      if(in_array($indexes, $comp_pairs, false)){
+  // if(in_array($indexes, $comp_pairs_chembl) == false){
+      if(in_array($indexes, $comp_pairs) ==  false){
           if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
                 $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],
                                             $rowsa[$i]['smiles_a'],$rowsb[$i]['smiles_b'],
@@ -160,8 +160,9 @@
                                             $rowsa[$i]['logd'], $rowsb[$i]['logd'],
                                             $rowsa[$i]['smirks']);
           }
-          array_push($comp_pairs, $indexes);
+          // array_push($comp_pairs, $indexes);
       }
+      array_push($comp_pairs, $indexes);
 
     }
 
@@ -336,7 +337,19 @@
 
     for($i = 0; $i < count($rowsa); ++$i) {
       $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
-      if(in_array($indexes, $comp_pairs_chembl, false)){
+      // if(in_array($indexes, $comp_pairs_chembl, True)){
+      //   echo($indexes);
+      //   echo("<br>");
+      //   // echo("Sandeep");
+      // }
+
+      if(in_array($indexes, $comp_pairs_chembl) == false){
+
+        // echo($indexes);
+        // echo("<br>");
+        // echo("<br>");
+
+        // echo("<br>");
           if($rowsa[$i]['chmbl_clearance'] >0 || $rowsa[$i]['chmbl_clearance'] >0){
             $diff = abs($rowsb[$i]['chmbl_clearance'] - $rowsa[$i]['chmbl_clearance']);
             $array_diff += [$i => $diff];
@@ -350,6 +363,7 @@
                                          $rowsa[$i]['chmbl_vdss'],$rowsb[$i]['chmbl_vdss'],
                                          $rowsa[$i]['smirks']);
            }
+           // array_push($comp_pairs_chembl, $indexes);
        }
        array_push($comp_pairs_chembl, $indexes);
     }

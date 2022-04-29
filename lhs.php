@@ -133,7 +133,7 @@
             $diff = $rowsb[$i]['erk_ic50'] - $rowsa[$i]['erk_ic50'];
             $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
             $array_diff += [$i => $diff];
-            if(in_array($indexes, $comp_pairs, false)){
+            if(in_array($indexes, $comp_pairs) == false){
                 if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
                     $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],
                                                 $rowsa[$i]['smiles_a'],$rowsb[$i]['smiles_b'],
@@ -143,8 +143,9 @@
                                                 $rowsa[$i]['logd'], $rowsb[$i]['logd']
                                                 );
                 }
-                array_push($comp_pairs, $indexes);
+                // array_push($comp_pairs, $indexes);
             }
+            array_push($comp_pairs, $indexes);
           }
 
           asort($array_diff);
@@ -300,7 +301,7 @@
 
            for($i = 0; $i < count($rowsa); ++$i) {
              $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
-             if(in_array($indexes, $comp_pairs_chembl, false)){
+             if(in_array($indexes, $comp_pairs_chembl) ==  false){
                  if($rowsa[$i]['chmbl_clearance'] >0 || $rowsa[$i]['chmbl_clearance'] >0){
                      $diff = abs($rowsb[$i]['chmbl_clearance'] - $rowsa[$i]['chmbl_clearance']);
                      $array_diff += [$i => $diff];
