@@ -85,6 +85,8 @@
 
     // print_r($stmt);
 
+    // print_r($stmt);
+
     $stmt = $pdo->prepare("SELECT id_b,smirks, lhs_id,smiles_b, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
                                from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50, herg, mean
                                as solubility from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50,
