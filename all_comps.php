@@ -77,7 +77,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
  $master_arr_ikena = array();
  $master_arr_ikena[] = array('ID_1','ID_2',
-                             $_SESSION['prop_1'],$_SESSION['prop_1'],
+                             $_SESSION['prop_1']."_1",$_SESSION['prop_1']."_2",
                              'All_data_1','All_data_2',
                              'Replicates_1','Replicates_2',
                              'Registered_data_1', 'Registered_data_2',
