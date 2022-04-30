@@ -80,6 +80,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                              $_SESSION['prop_1'],$_SESSION['prop_1'],
                              'All_data_1','All_data_2',
                              'Replicates_1','Replicates_2',
+                             'Registered_data_1', 'Registered_data_2',
                             'Trans_id');
 
 
@@ -89,9 +90,10 @@ for($i = 0; $i < count($rows); ++$i) {
   if(in_array($indexes, $comp_pairs) ==  false){
          // if($i%2 == 0){
             $master_arr_ikena[] = array($rows[$i]['mol_ida'],$rows[$i]['mol_idb'],
-                                        $rows[$i]['raw_a'],$rows[$i]['raw_b'],
+                                        $rows[$i]['erk1'],$rows[$i]['erk2'],
                                         $rows[$i]['data_A'],$rows[$i]['data_B'],
                                         $rows[$i]['count_A'], $rows[$i]['count_B'],
+                                        $rows[$i]['raw_a'], $rows[$i]['raw_b'],
                                       $rows[$i]['transform_id']);
           // }
       // array_push($comp_pairs, $indexes);
