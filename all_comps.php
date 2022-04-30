@@ -2,6 +2,7 @@
   require_once "pdo.php";
   require_once "bootstrap.php";
   session_start();
+  ini_set('memory_limit', '500M');
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +72,7 @@ from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida, ". $_SESSION['prop_1
 join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
 join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id");
 
+print_r($stmt);
 
 $stmt->execute(array());
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
