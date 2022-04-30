@@ -2,7 +2,7 @@
   require_once "pdo.php";
   require_once "bootstrap.php";
   session_start();
-  ini_set('memory_limit', '500M');
+  ini_set('memory_limit', '100M');
 ?>
 
 <!DOCTYPE html>
@@ -65,14 +65,25 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
  }
 
 
- $stmt = $pdo->prepare("SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. " .mean as erk2,
- data_A, data as data_B, count_A ,count as count_B, raw_a, ". $_SESSION['prop_1']. " as raw_b
-from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida, ". $_SESSION['prop_1']. ".mean as erk1, data as data_A,
-     count as count_A, ". $_SESSION['prop_1']. " as raw_a FROM mmp
-join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
-join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id");
+//  $stmt = $pdo->prepare("select * from (SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. ".mean as erk2,
+//  data_A, data as data_B, count_A ,count as count_B, raw_a, ". $_SESSION['prop_1']. " as raw_b, ". $_SESSION['prop_1']. ".mean-erk1 as difference
+// from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida, ". $_SESSION['prop_1']. ".mean as erk1, data as data_A,
+//      count as count_A, ". $_SESSION['prop_1']. " as raw_a FROM mmp
+// join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
+// join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id") as tab where difference > 0
+// order by difference desc limit 5000" );
 
-print_r($stmt);
+
+
+$stmt = $pdo->prepare("select * from (SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. ".mean as
+erk2,". $_SESSION['prop_1']. ".mean-erk1 as difference ,data_A, data as data_B, count_A ,count as count_B, raw_a,
+". $_SESSION['prop_1']. " as raw_b from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida,
+". $_SESSION['prop_1']. ".mean as erk1, data as data_A, count as count_A, ". $_SESSION['prop_1']. "
+as raw_a FROM mmp join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
+join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab where difference > 0
+order by difference desc limit 10000");
+
+// print_r($stmt);
 
 $stmt->execute(array());
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,7 +123,8 @@ $_SESSION['filename'] = 'all_mmps.csv';
 
  <form method='post' action='download.php'>
  <div class="downl">
-  <input type='submit' value='Download all MMPs' name='Export'>
+  <input type='submit' value='Download MMPs' name='Export'>
+  <h3> Download possible for maximum 10000 MMPs </h3>
   <!-- <input type='submit' value='Download IKENA MMPs' name='Export' style='display: inline:block; float:right; margin-right:45%; margin-bottom:20px; border-radius: 5px; padding:10px; background-color: #daead5;text-decoration: none;'> -->
  </div>
  <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
