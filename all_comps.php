@@ -63,73 +63,40 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
    echo("</td><tr>\n");
  }
 
- $stmt = $pdo->prepare("SELECT id_a,smirks,smiles_a, lhs_id, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
-                            from (select id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50, herg, mean
-                            as solubility from (select id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50,
-                            mean as herg from (SELECT mol_id_a as id_a,smiles_a,smirks,lhs_id, transform_id, context_id,
-                            mean as erk_ic50 from (SELECT id_a, ikenacomps.Molecule_id as mol_id_a, ikenacomps.CXCSmiles as smiles_a,
-                            transform.transform as smirks, lhs_id, transform_id,context_id FROM mmp
-                            join ikenacomps on ikenacomps.id=id_a join transform on transform.id = transform_id) as tab join ". $_SESSION['prop_1']. "
-                            on ". $_SESSION['prop_1']. ".mol_id = id_a) as tab
-                            left join ". $_SESSION['prop_2']. "
-                            on ". $_SESSION['prop_2']. ".mol_id = id_a) as tab left
-                            join ". $_SESSION['prop_3']. "
-                            on ". $_SESSION['prop_3']. ".mol_id = id_a) as tab
-                           left join ". $_SESSION['prop_4']. " on ". $_SESSION['prop_4']. ".mol_id = id_a");
 
- $stmt->execute(array());
- $rowsa = $stmt->fetchAll(PDO::FETCH_ASSOC);
+ $stmt = $pdo->prepare("SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. " .mean as erk2,
+ data_A, data as data_B, count_A ,count as count_B, raw_a, ". $_SESSION['prop_1']. " as raw_b
+from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida, ". $_SESSION['prop_1']. ".mean as erk1, data as data_A,
+     count as count_A, ". $_SESSION['prop_1']. " as raw_a FROM mmp
+join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
+join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id");
 
- // print_r($stmt);
 
- // print_r($stmt);
-
- $stmt = $pdo->prepare("SELECT id_b,smirks, lhs_id,smiles_b, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
-                            from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50, herg, mean
-                            as solubility from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50,
-                            mean as herg from (SELECT mol_id_b as id_b,smirks,smiles_b,lhs_id, transform_id, context_id,
-                            mean as erk_ic50 from (SELECT id_b, ikenacomps.Molecule_id as mol_id_b, ikenacomps.CXCSmiles as smiles_b,
-                            transform.transform as smirks, lhs_id, transform_id,context_id FROM mmp
-                            join ikenacomps on ikenacomps.id=id_b join transform on transform.id = transform_id) as tab join ". $_SESSION['prop_1']. "
-                            on ". $_SESSION['prop_1']. ".mol_id = id_b) as tab
-                            left join ". $_SESSION['prop_2']. "
-                            on ". $_SESSION['prop_2']. ".mol_id = id_b) as tab left
-                            join ". $_SESSION['prop_3']. "
-                            on ". $_SESSION['prop_3']. ".mol_id = id_b) as tab
-                           left join ". $_SESSION['prop_4']. " on ". $_SESSION['prop_4']. ".mol_id = id_b");
-
- $stmt->execute(array());
- $rowsb = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+$stmt->execute(array());
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
  $master_arr_ikena = array();
  $master_arr_ikena[] = array('ID_1','ID_2',
-                             'Smiles_1', 'Smiles_2',
                              $_SESSION['prop_1'],$_SESSION['prop_1'],
-                             $_SESSION['prop_2'],$_SESSION['prop_2'],
-                             $_SESSION['prop_3'],$_SESSION['prop_3'],
-                             $_SESSION['prop_4'],$_SESSION['prop_4'],
-                             'Transform');
+                             'All_data_1','All_data_2',
+                             'Replicates_1','Replicates_2',
+                            'Trans_id');
 
 
 $comp_pairs = array();
-for($i = 0; $i < count($rowsa); ++$i) {
-  // $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
-  // if(in_array($indexes, $comp_pairs) ==  false){
-      // if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
-         if($i%2 == 0){
-            $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],
-                                        $rowsa[$i]['smiles_a'],$rowsb[$i]['smiles_b'],
-                                        $rowsa[$i]['erk_ic50'],$rowsb[$i]['erk_ic50'],
-                                        $rowsa[$i]['herg'], $rowsb[$i]['herg'],
-                                        $rowsa[$i]['solubility'], $rowsb[$i]['solubility'],
-                                        $rowsa[$i]['logd'], $rowsb[$i]['logd'],
-                                        $rowsa[$i]['smirks']);
-          }
-      // }
+for($i = 0; $i < count($rows); ++$i) {
+  $indexes = $rows[$i]['mol_ida'].$rows[$i]['mol_idb'];
+  if(in_array($indexes, $comp_pairs) ==  false){
+         // if($i%2 == 0){
+            $master_arr_ikena[] = array($rows[$i]['mol_ida'],$rows[$i]['mol_idb'],
+                                        $rows[$i]['raw_a'],$rows[$i]['raw_b'],
+                                        $rows[$i]['data_A'],$rows[$i]['data_B'],
+                                        $rows[$i]['count_A'], $rows[$i]['count_B'],
+                                      $rows[$i]['transform_id']);
+          // }
       // array_push($comp_pairs, $indexes);
-  // }
-  // array_push($comp_pairs, $indexes);
+  }
+  array_push($comp_pairs, $indexes);
 
 }
 
