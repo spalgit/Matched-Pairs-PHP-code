@@ -38,6 +38,9 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
  $stmt->execute(array());
  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+
  echo('<table border="5">'."\n");
  echo('<tr><th>Compound</th>');
  echo('<th>'.$_SESSION['prop_1'].'</th>');
@@ -80,8 +83,8 @@ erk2,". $_SESSION['prop_1']. ".mean-erk1 as difference ,data_A, data as data_B, 
 ". $_SESSION['prop_1']. " as raw_b from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida,
 ". $_SESSION['prop_1']. ".mean as erk1, data as data_A, count as count_A, ". $_SESSION['prop_1']. "
 as raw_a FROM mmp join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
-join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab where difference > 0
-order by difference desc limit 10000");
+join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab where difference >= 0
+order by difference desc");
 
 // print_r($stmt);
 
@@ -124,7 +127,7 @@ $_SESSION['filename'] = 'all_mmps.csv';
  <form method='post' action='download.php'>
  <div class="downl">
   <input type='submit' value='Download MMPs' name='Export'>
-  <h3> Download possible for maximum 10000 MMPs </h3>
+  <!-- <h3> Download possible for maximum 10000 MMPs </h3> -->
   <!-- <input type='submit' value='Download IKENA MMPs' name='Export' style='display: inline:block; float:right; margin-right:45%; margin-bottom:20px; border-radius: 5px; padding:10px; background-color: #daead5;text-decoration: none;'> -->
  </div>
  <textarea name='export_data' style='display: none;'><?php echo $serialize_user_arr; ?></textarea>
