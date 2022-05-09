@@ -263,7 +263,7 @@
                               left join ". $field_4. "  on ". $field_4. ".mol_id = id_a"
                              );
 
-    // print_r($stmt);
+    print_r($stmt);
 
     $stmt->execute(array(':trans_id' => $trans_id));
     $rowsa = $stmt->fetchAll(PDO::FETCH_ASSOC);

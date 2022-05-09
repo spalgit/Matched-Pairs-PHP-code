@@ -43,6 +43,7 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
 
  echo('<table border="5">'."\n");
  echo('<tr><th>Compound</th>');
+ echo('<th>'."Compound_ID".'</th>');
  echo('<th>'.$_SESSION['prop_1'].'</th>');
  echo('<th>'.$_SESSION['prop_2'].'</th>');
  echo('<th>'.$_SESSION['prop_3'].'</th>');
@@ -54,6 +55,8 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
    echo "<tr><td>";
    $img = "images/".$row['Compound_id'].".png";
    echo("<img src=".$img.">");
+   echo("</td><td>");
+   echo(htmlentities($row['Compound_id']));
    echo("</td><td>");
    echo(htmlentities($row['erk_ic50']));
    echo("</td><td>");
