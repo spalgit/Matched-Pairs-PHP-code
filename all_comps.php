@@ -81,13 +81,36 @@ $stmt = $pdo->prepare("SELECT Compound_id,erk_ic50,herg_IC50, Fassif_sol, erk_mo
 
 
 
-$stmt = $pdo->prepare("select * from (SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. ".mean as
-erk2,". $_SESSION['prop_1']. ".mean-erk1 as difference ,data_A, data as data_B, count_A ,count as count_B, raw_a,
-". $_SESSION['prop_1']. " as raw_b from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida,
-". $_SESSION['prop_1']. ".mean as erk1, data as data_A, count as count_A, ". $_SESSION['prop_1']. "
-as raw_a FROM mmp join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
-join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab where difference >= 0
-order by difference desc");
+$stmt = $pdo->prepare("select * from (select id_a, id_b, mol_ida,mol_idb, erk1, erk2,perk1,perk2, craf1, craf2,
+logd_1, ". $_SESSION['prop_4']. ".mean as logd_2,
+erk2-erk1 as difference from (select id_a, id_b, mol_ida,mol_idb, erk1, erk2,perk1,perk2, craf1,
+". $_SESSION['prop_3']. ".mean as craf2, logd_1 from (select id_a, id_b, mol_ida,mol_idb,
+erk1, erk2,perk1, ". $_SESSION['prop_2']. ".mean as perk2 , craf1, logd_1 from
+(select id_a, id_b, mol_ida, Molecule_id as mol_idb ,erk1, ". $_SESSION['prop_1']. ".mean as
+erk2,perk1, craf1, logd_1 from (select id_a, id_b, mol_ida, erk1, perk1, craf1, ". $_SESSION['prop_4']. ".mean as logd_1 from
+(select id_a, id_b, mol_ida, erk1, perk1, ". $_SESSION['prop_3']. ".mean as craf1 from
+(select id_a, id_b, mol_ida, erk1, ". $_SESSION['prop_2']. ".mean as perk1 from
+(SELECT id_a,id_b, Molecule_id as mol_ida, ". $_SESSION['prop_1']. ".mean as erk1 FROM mmp join
+". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab left
+join ". $_SESSION['prop_2']. " on id_a = ". $_SESSION['prop_2']. ".mol_id) as
+tab left join ". $_SESSION['prop_3']. " on
+id_a = ". $_SESSION['prop_3']. ".mol_id) as tab left join ". $_SESSION['prop_4']. " on ". $_SESSION['prop_4']. ".mol_id= id_a)
+as tab left join
+". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab left
+join ". $_SESSION['prop_2']. " on ". $_SESSION['prop_2']. ".mol_id = id_b)
+as tab left join
+". $_SESSION['prop_3']. " on ". $_SESSION['prop_3']. ".mol_id= id_b) as tab left
+join ". $_SESSION['prop_4']. " ON
+". $_SESSION['prop_4']. ".mol_id=id_b) as tab where difference >=0 order by difference desc");
+
+
+// $stmt = $pdo->prepare("select * from (SELECT transform_id, mol_ida, Molecule_id as mol_idb, erk1,". $_SESSION['prop_1']. ".mean as
+// erk2,". $_SESSION['prop_1']. ".mean-erk1 as difference ,data_A, data as data_B, count_A ,count as count_B, raw_a,
+// ". $_SESSION['prop_1']. " as raw_b from(SELECT id_a,id_b,transform_id, Molecule_id as mol_ida,
+// ". $_SESSION['prop_1']. ".mean as erk1, data as data_A, count as count_A, ". $_SESSION['prop_1']. "
+// as raw_a FROM mmp join ". $_SESSION['prop_1']. " on id_a = ". $_SESSION['prop_1']. ".mol_id) as tab
+// join ". $_SESSION['prop_1']. " on id_b = ". $_SESSION['prop_1']. ".mol_id) as tab where difference >= 0
+// order by difference desc");
 
 // print_r($stmt);
 
@@ -95,12 +118,21 @@ $stmt->execute(array());
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
  $master_arr_ikena = array();
- $master_arr_ikena[] = array('ID_1','ID_2',
-                             $_SESSION['prop_1']."_1",$_SESSION['prop_1']."_2",
-                             'All_data_1','All_data_2',
-                             'Replicates_1','Replicates_2',
-                             'Registered_data_1', 'Registered_data_2',
-                            'Trans_id');
+ // $master_arr_ikena[] = array('ID_1','ID_2',
+ //                             $_SESSION['prop_1']."_1",$_SESSION['prop_1']."_2",
+ //                             'All_data_1','All_data_2',
+ //                             'Replicates_1','Replicates_2',
+ //                             'Registered_data_1', 'Registered_data_2',
+ //                            'Trans_id');
+
+
+
+$master_arr_ikena[] = array('ID_1','ID_2',
+                            $_SESSION['prop_1']."_1",$_SESSION['prop_1']."_2",
+                            $_SESSION['prop_2']."_1",$_SESSION['prop_2']."_2",
+                            $_SESSION['prop_3']."_1",$_SESSION['prop_3']."_2",
+                            $_SESSION['prop_4']."_1",$_SESSION['prop_4']."_2",
+                          );
 
 
 $comp_pairs = array();
@@ -108,12 +140,19 @@ for($i = 0; $i < count($rows); ++$i) {
   $indexes = $rows[$i]['mol_ida'].$rows[$i]['mol_idb'];
   if(in_array($indexes, $comp_pairs) ==  false){
          // if($i%2 == 0){
+            // $master_arr_ikena[] = array($rows[$i]['mol_ida'],$rows[$i]['mol_idb'],
+            //                             $rows[$i]['erk1'],$rows[$i]['erk2'],
+            //                             $rows[$i]['data_A'],$rows[$i]['data_B'],
+            //                             $rows[$i]['count_A'], $rows[$i]['count_B'],
+            //                             $rows[$i]['raw_a'], $rows[$i]['raw_b'],
+            //                           $rows[$i]['transform_id']);
+
             $master_arr_ikena[] = array($rows[$i]['mol_ida'],$rows[$i]['mol_idb'],
                                         $rows[$i]['erk1'],$rows[$i]['erk2'],
-                                        $rows[$i]['data_A'],$rows[$i]['data_B'],
-                                        $rows[$i]['count_A'], $rows[$i]['count_B'],
-                                        $rows[$i]['raw_a'], $rows[$i]['raw_b'],
-                                      $rows[$i]['transform_id']);
+                                        $rows[$i]['perk1'],$rows[$i]['perk2'],
+                                        $rows[$i]['craf1'], $rows[$i]['craf2'],
+                                        $rows[$i]['logd_1'], $rows[$i]['logd_2']
+                                      );
           // }
       // array_push($comp_pairs, $indexes);
   }
