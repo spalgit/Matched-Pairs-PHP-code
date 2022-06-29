@@ -62,10 +62,10 @@
               $field_4 = "chembl_bioavailability";
             }
 
-            $stmt = $pdo->prepare("SELECT id_a, context_id, smiles_a,erk_ic50,herg, solubility,context, mean as logd
-             from (select id_a, context_id, erk_ic50, smiles_a,solubility, context,mean
-             as herg from(select id_a,context_id,smiles_a, erk_ic50,context,
-             mean as solubility from (SELECT mol_id_a as id_a,smiles_a,context_id, context,
+            $stmt = $pdo->prepare("SELECT mol_id_a as id_a, context_id, smiles_a,erk_ic50,herg, solubility,context, mean as logd
+             from (select id_a,mol_id_a, context_id, erk_ic50, smiles_a,solubility, context,mean
+             as herg from(select id_a,mol_id_a,context_id,smiles_a, erk_ic50,context,
+             mean as solubility from (SELECT mol_id_a, id_a,smiles_a,context_id, context,
              mean as erk_ic50 from(SELECT id_a, ikenacomps.Molecule_id as mol_id_a,
              ikenacomps.CXCSmiles as smiles_a, context,
              context_id FROM mmp join ikenacomps on ikenacomps.id=id_a
@@ -83,10 +83,10 @@
 
             // print_r($stmt);
 
-            $stmt = $pdo->prepare("SELECT id_b, context_id, smiles_b,erk_ic50,herg, solubility, mean as logd
-             from (select id_b, context_id, erk_ic50, smiles_b,solubility, mean
-             as herg from(select id_b,context_id, smiles_b,erk_ic50,
-             mean as solubility from (SELECT mol_id_b as id_b,smiles_b,context_id,
+            $stmt = $pdo->prepare("SELECT mol_id_b as id_b, context_id, smiles_b,erk_ic50,herg, solubility, mean as logd
+             from (select id_b,mol_id_b, context_id, erk_ic50, smiles_b,solubility, mean
+             as herg from(select id_b,mol_id_b,context_id, smiles_b,erk_ic50,
+             mean as solubility from (SELECT mol_id_b, id_b,smiles_b,context_id,
              mean as erk_ic50 from(SELECT id_b, ikenacomps.Molecule_id as mol_id_b,
              ikenacomps.CXCSmiles as smiles_b,
              context_id FROM mmp join ikenacomps on ikenacomps.id=id_b

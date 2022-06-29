@@ -27,13 +27,6 @@
 
       </div>
 
-       <!-- <form method='post' action='download.php'>
-        <input type='submit' value='Download IKENA MMPs' name='Export'> -->
-
-  <!-- </body>
-</html> -->
-
-
 <?php
 
     // echo("<h2>"."IKENA Compounds and Chembl"."</h2>");
@@ -65,10 +58,10 @@
       $field_4 = "chembl_bioavailability";
     }
 
-    $stmt = $pdo->prepare("SELECT id_a,smirks,smiles_a, lhs_id, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
-                               from (select id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50, herg, mean
-                               as solubility from (select id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50,
-                               mean as herg from (SELECT mol_id_a as id_a,smiles_a,smirks,lhs_id, transform_id, context_id,
+    $stmt = $pdo->prepare("SELECT mol_id_a as id_a,smirks,smiles_a, lhs_id, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
+                               from (select id_a,mol_id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50, herg, mean
+                               as solubility from (select id_a,mol_id_a,smirks, lhs_id,smiles_a, transform_id, context_id, erk_ic50,
+                               mean as herg from (SELECT mol_id_a, id_a,smiles_a,smirks,lhs_id, transform_id, context_id,
                                mean as erk_ic50 from (SELECT id_a, ikenacomps.Molecule_id as mol_id_a, ikenacomps.CXCSmiles as smiles_a,
                                transform.transform as smirks, lhs_id, transform_id,context_id FROM mmp
                                join ikenacomps on ikenacomps.id=id_a join transform on transform.id = transform_id
@@ -87,10 +80,10 @@
 
     // print_r($stmt);
 
-    $stmt = $pdo->prepare("SELECT id_b,smirks, lhs_id,smiles_b, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
-                               from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50, herg, mean
-                               as solubility from (select id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50,
-                               mean as herg from (SELECT mol_id_b as id_b,smirks,smiles_b,lhs_id, transform_id, context_id,
+    $stmt = $pdo->prepare("SELECT mol_id_b as id_b,smirks, lhs_id,smiles_b, transform_id, context_id, erk_ic50,herg, solubility, mean as logd
+                               from (select id_b,mol_id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50, herg, mean
+                               as solubility from (select id_b,mol_id_b,smirks,smiles_b, lhs_id, transform_id, context_id, erk_ic50,
+                               mean as herg from (SELECT mol_id_b, id_b,smirks,smiles_b,lhs_id, transform_id, context_id,
                                mean as erk_ic50 from (SELECT id_b, ikenacomps.Molecule_id as mol_id_b, ikenacomps.CXCSmiles as smiles_b,
                                transform.transform as smirks, lhs_id, transform_id,context_id FROM mmp
                                join ikenacomps on ikenacomps.id=id_b join transform on transform.id = transform_id
@@ -106,6 +99,7 @@
     $rowsb = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
+    // print_r($stmt);
     // print_r($rowsa['0']['smirks']);
 
     echo("<h2>"."IKENA Compounds and Chembl with transform ". $rowsa['0']['smirks'] ."</h2>");
@@ -144,18 +138,7 @@
       $diff = abs($rowsb[$i]['erk_ic50'] - $rowsa[$i]['erk_ic50']);
       $indexes = $rowsa[$i]['id_a'].$rowsb[$i]['id_b'];
 
-      // echo($indexes);
-      // echo('<br>');
-      // echo($rowsa[$i]['erk_ic50']."_".$rowsb[$i]['erk_ic50']);
-      // // echo($rowsb[$i]['erk_ic50']);
-      // echo('<br>');
       $array_diff += [$i => $diff];
-      // print_r(in_array($indexes, $comp_pairs));
-      // echo('<br>');
-      // array_push($comp_pairs, $indexes);
-      // print_r($comp_pairs);
-      // echo('<br>');
-  // if(in_array($indexes, $comp_pairs_chembl) == false){
       if(in_array($indexes, $comp_pairs) ==  false){
           if($rowsa[$i]['erk_ic50'] >0 || $rowsb[$i]['erk_ic50'] >0){
                 $master_arr_ikena[] = array($rowsa[$i]['id_a'],$rowsb[$i]['id_b'],

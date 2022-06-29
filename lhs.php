@@ -63,10 +63,10 @@
       }
 
 
-      $stmt = $pdo->prepare("SELECT id_a, context_id,smiles_a,lhs_trans, erk_ic50,herg, solubility, mean as logd
-                           from (select id_a, context_id, erk_ic50,smiles_a,lhs_trans, solubility, mean
-                           as herg from(select id_a,context_id, erk_ic50,smiles_a,lhs_trans,
-                           mean as solubility from (SELECT mol_id_a as id_a,context_id,smiles_a,lhs_trans,
+      $stmt = $pdo->prepare("SELECT mol_id_a as id_a, context_id,smiles_a,lhs_trans, erk_ic50,herg, solubility, mean as logd
+                           from (select id_a,mol_id_a, context_id, erk_ic50,smiles_a,lhs_trans, solubility, mean
+                           as herg from(select id_a,mol_id_a,context_id, erk_ic50,smiles_a,lhs_trans,
+                           mean as solubility from (SELECT mol_id_a, id_a,context_id,smiles_a,lhs_trans,
                            mean as erk_ic50 from(SELECT id_a, ikenacomps.Molecule_id as mol_id_a,
                            ikenacomps.CXCSmiles as smiles_a, transform_left.transform_left as lhs_trans,
                            context_id FROM mmp join ikenacomps on ikenacomps.id=id_a
@@ -82,10 +82,10 @@
         $stmt->execute(array(':left_id' => $lhs_id));
         $rowsa = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("SELECT id_b, context_id, erk_ic50,herg,smiles_b,lhs_trans, solubility, mean as logd
-                             from (select id_b, context_id,smiles_b,lhs_trans, erk_ic50, solubility, mean
-                             as herg from(select id_b,context_id, smiles_b,lhs_trans,erk_ic50,
-                             mean as solubility from (SELECT mol_id_b as id_b,context_id,smiles_b,lhs_trans,
+        $stmt = $pdo->prepare("SELECT mol_id_b as id_b, context_id, erk_ic50,herg,smiles_b,lhs_trans, solubility, mean as logd
+                             from (select id_b,mol_id_b, context_id,smiles_b,lhs_trans, erk_ic50, solubility, mean
+                             as herg from(select id_b,mol_id_b,context_id, smiles_b,lhs_trans,erk_ic50,
+                             mean as solubility from (SELECT mol_id_b, id_b,context_id,smiles_b,lhs_trans,
                              mean as erk_ic50 from(SELECT id_b, ikenacomps.Molecule_id as mol_id_b,
                              ikenacomps.CXCSmiles as smiles_b, transform_left.transform_left as lhs_trans,
                              context_id FROM mmp join ikenacomps on ikenacomps.id=id_b

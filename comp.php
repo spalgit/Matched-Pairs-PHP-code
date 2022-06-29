@@ -65,11 +65,11 @@
 
     /* Now extract all the parameters of the Matched Pairs*/
 
-    $stmt = $pdo->prepare("SELECT id_b,smirks, lhs_id, transform_id, context_id, erk_ic50,
+    $stmt = $pdo->prepare("SELECT mol_id_b as id_b,smirks, lhs_id, transform_id, context_id, erk_ic50,
                            herg, solubility, mean as logd
-                           from (select id_b,smirks, lhs_id, transform_id, context_id, erk_ic50, herg, mean
-                           as solubility from (select id_b,smirks, lhs_id, transform_id, context_id, erk_ic50,
-                             mean as herg from (SELECT mol_id_b as id_b,smirks,lhs_id, transform_id, context_id,
+                           from (select id_b,mol_id_b,smirks, lhs_id, transform_id, context_id, erk_ic50, herg, mean
+                           as solubility from (select id_b,mol_id_b,smirks, lhs_id, transform_id, context_id, erk_ic50,
+                             mean as herg from (SELECT id_b,mol_id_b,smirks,lhs_id, transform_id, context_id,
                              mean as erk_ic50 FROM ". $_SESSION['prop_1']. "
                              join (SELECT id_b, ikenacomps.Molecule_id as mol_id_b, transform.transform as smirks,
                              lhs_id, transform_id,context_id FROM mmp join ikenacomps on ikenacomps.id=id_b
@@ -85,7 +85,9 @@
      $stmt->execute(array(':id_comp' => $ref_id));
      $rowss = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-     // print_r($stmt);
+     echo($_SESSION['prop_2']);
+
+     print_r($stmt);
      //
      // print_r($row_ref_erk['Molecule_id']);
 
@@ -127,6 +129,8 @@
      $serialize_user_arr = serialize($master_arr_ikena);
 
      $_SESSION['filename'] = 'comps_mmps.csv';
+
+     echo($row['id_b']);
 
 
      foreach ($rowss as $row){
