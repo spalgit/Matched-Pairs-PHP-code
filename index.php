@@ -75,7 +75,8 @@
         <p>Please choose some tabels and cut and paste in the form on the right</p>
         <ol>
 
-          <li>erk5_biochem_ic50__avg_ic50__nm_</li>
+
+<li>erk5_biochem_ic50__avg_ic50__nm_</li>
 <li>herg__ic50__um_</li>
 <li>kinetic_solubility__fassif___kinetic_solubility__um_</li>
 <li>measured_logd__logd</li>
@@ -108,17 +109,15 @@
 <li>plasma_protein_binding_ucentri__recovery____</li>
 <li>aspc_1__g12d__ctg____inhibition____</li>
 <li>aspc_1__g12d__ctg__average_ic50__nm_</li>
-<li>g12c_kras__gtp_htrf__ic50__um_</li>
-<li>g12c_kras__gtp_htrf__average_ic50__nm_</li>
-<li>g12c_kras__gtp_htrf__selectivity__g12c_wt_</li>
-<li>g12d_kras_craf_gmppnp_htrf__ic50__um_</li>
-<li>g12d_kras_craf_gmppnp_htrf__average_ic50__nm_</li>
-<li>g12d_kras_craf_gmppnp_htrf__selectivity__g12d_wt_</li>
-<li>g12d_kras__gtp_htrf__ic50__um_</li>
-<li>g12d_kras__gtp_htrf__average_ic50__nm_</li>
-<li>g12v_kras__gtp_htrf__ic50__um_</li>
-<li>g12v_kras__gtp_htrf__average_ic50__nm_</li>
-<li>g12v_kras__gtp_htrf__selectivity__g12v_wt_</li>
+<li>g12c_kras__gtp_htrf__off_state___ic50__um_</li>
+<li>g12c_kras__gtp_htrf__off_state___average_ic50__nm_</li>
+<li>g12c_kras__gtp_htrf__off_state___selectivity__g12c_wt_</li>
+<li>g12d_kras_craf_gmppnp_htrf__on_state___ic50__um_</li>
+<li>g12d_kras_craf_gmppnp_htrf__on_state___average_ic50__nm_</li>
+<li>g12d_kras__gtp_htrf__off_state___ic50__um_</li>
+<li>g12d_kras__gtp_htrf__off_state___average_ic50__nm_</li>
+<li>g12v_kras__gtp_htrf__off_state___ic50__um_</li>
+<li>g12v_kras__gtp_htrf__off_state___average_ic50__nm_</li>
 <li>mdck_w_bsa___pgp_inhibitor__papp__a_to_b___10_6_cm_s_</li>
 <li>mdck_w_bsa___pgp_inhibitor__papp__b_to_a___10_6_cm_s_</li>
 <li>mdck_w_bsa___pgp_inhibitor__efflux_ratio</li>
@@ -135,9 +134,9 @@
 <li>perk_pc9__wt__htrf__4_hour___ic50__um_</li>
 <li>perk_pc9__wt__htrf__4_hour___ic95__um_</li>
 <li>perk_pc9__wt__htrf__4_hour___average_ic50__nm_</li>
-<li>wt_kras_craf_gmppnp_htrf__ic50__um_</li>
-<li>wt_kras_craf_gmppnp_htrf__average_ic50__nm_</li>
-<li>wt_kras__gtp_htrf__average_ic50__nm_</li>
+<li>wt_kras_craf_gmppnp_htrf__on_state___ic50__um_</li>
+<li>wt_kras_craf_gmppnp_htrf__on_state___average_ic50__nm_</li>
+<li>wt_kras__gtp_htrf__off_state___average_ic50__nm_</li>
 <li>log_p</li>
 <li>log_d</li>
 <li>topological_polar_surface_area</li>

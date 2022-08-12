@@ -85,9 +85,6 @@
      $stmt->execute(array(':id_comp' => $ref_id));
      $rowss = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-     echo($_SESSION['prop_2']);
-
-     print_r($stmt);
      //
      // print_r($row_ref_erk['Molecule_id']);
 
@@ -129,8 +126,6 @@
      $serialize_user_arr = serialize($master_arr_ikena);
 
      $_SESSION['filename'] = 'comps_mmps.csv';
-
-     echo($row['id_b']);
 
 
      foreach ($rowss as $row){
